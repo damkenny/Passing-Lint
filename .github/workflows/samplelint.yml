@@ -1,0 +1,30 @@
+name: lint-code
+
+on:
+    pull_request:
+        branches: [main]
+
+jobs:
+    run-ci:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v2
+
+            - name: Set up Node.js
+              uses: actions/setup-node@v1
+              with:
+                  node-version: 16
+                  registry-url: https://npm.pkg.github.com/
+
+            - name: Set up npm
+              run: npm ci && npm install
+
+            - name: Check prettier rules format
+              run: npm run format:check
+
+            - name: Lint code
+              run: npm run lint:check
+
+            - name: Auto-fix lint errors
+              run: npm run lint:fix
